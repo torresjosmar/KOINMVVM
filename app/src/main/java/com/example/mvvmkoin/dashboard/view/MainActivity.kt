@@ -1,24 +1,26 @@
 package com.example.mvvmkoin.dashboard.view
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
-import com.example.mvvmkoin.R
-import com.example.mvvmkoin.dashboard.viewmodel.DashboardViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.NavHostFragment
-import com.example.mvvmkoin.core.common.Outcome
-import com.example.mvvmkoin.dashboard.action.DashboardActions
+import com.coderio.pocmvvmandroid.common.protocol.ProtocolAction
+import com.example.mvvmkoin.core.base.BaseActivity
+import com.example.mvvmkoin.databinding.MainActivityBinding
+import java.time.Duration
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        init()
+class MainActivity : BaseActivity<MainActivityBinding>() {
+    override fun init() {
+
     }
-    private fun init(){
 
+
+    //METODO PARA HACER CATCH DE LAS ACCIONES DEL COMUNICATION CALLBACK
+    override fun onFragmentEvent(action: ProtocolAction) {
+        when (action) {
+            is ProtocolAction.OnEventName -> {
+                Toast.makeText(this,action.value,Toast.LENGTH_LONG).show()
+            }
+            is ProtocolAction.OnConectionError -> {
+                Toast.makeText(this,"Error de Red",Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

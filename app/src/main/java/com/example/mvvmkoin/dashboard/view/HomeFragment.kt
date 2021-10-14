@@ -1,69 +1,55 @@
 package com.example.mvvmkoin.dashboard.view
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import com.example.mvvmkoin.R
+import com.coderio.pocmvvmandroid.common.protocol.ProtocolAction
+import com.example.mvvmkoin.core.base.BaseFragment
 import com.example.mvvmkoin.core.common.Outcome
 import com.example.mvvmkoin.dashboard.action.DashboardActions
 import com.example.mvvmkoin.dashboard.viewmodel.DashboardViewModel
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.example.mvvmkoin.databinding.HomeFragmentBinding
+import kotlinx.android.synthetic.main.home_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class HomeFragment : Fragment() {
-    private val viewModel: DashboardViewModel by viewModel()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+class HomeFragment : BaseFragment<HomeFragmentBinding>() {
+    val viewModel : DashboardViewModel by viewModel()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun init() {
         listenToObserver()
-        init()
+        setClickListeners()
     }
 
-    private fun init(){
-        btnRun.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
-            viewModel.loginUser("prueba","prueba")
-        }
+    override fun screenName(): String = "Home"
 
+    private fun setClickListeners(){
+        btnRun.setOnClickListener {
+            (viewModel as DashboardViewModel).loginUser("prueba","prueba")
+        }
     }
 
     private fun listenToObserver() {
-        viewModel.outcome.observe(requireActivity(), Observer {outcome ->
-            progressBar.visibility = View.GONE
+        viewModel.outcome.observe(this, Observer {outcome ->
             when(outcome){
                 is Outcome.Success -> onSuccess(outcome.data)
                 is Outcome.Failure -> onError(outcome.e)
+                is Outcome.Progress -> onLoading(outcome.loading)
                 else -> { }
             }
         })
     }
 
-    private fun onSuccess(data: DashboardActions) {
-        when (data) {
+    override fun onSuccess(data: DashboardActions) {
+        when(data){
             is DashboardActions.OnLoginResponse -> {
-                Toast.makeText(requireContext(), data.token, Toast.LENGTH_SHORT).show()
+                communication.onFragmentEvent(ProtocolAction.OnEventName(data.token))
             }
         }
     }
 
-    private fun onError(error: Throwable) {
-        error.printStackTrace()
-        Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+    //este metodo se puede agregar tambien al base fragment queda por definir
+    override fun onLoading(loading: Boolean) {
+        progressBar.isVisible = loading
     }
 
 }

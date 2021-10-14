@@ -1,8 +1,8 @@
 package com.example.mvvmkoin.dashboard.module
 
-import com.example.mvvmkoin.dashboard.controller.DashboardController
-import com.example.mvvmkoin.dashboard.repository.DashboardRepository
-import com.example.mvvmkoin.dashboard.service.DashboardService
+import com.example.mvvmkoin.dashboard.domain.DashboardController
+import com.example.mvvmkoin.dashboard.datarepository.repository.DashboardRepository
+import com.example.mvvmkoin.dashboard.datarepository.service.DashboardService
 import com.example.mvvmkoin.dashboard.viewmodel.DashboardViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -16,6 +16,7 @@ val dashboardModule: Module = module {
    single { DashboardController(dashboardRepository = get()) }
    single { DashboardRepository(dashboardService = get()) }
    single { providerUsersService(get()) }
+
 }
 
 fun providerUsersService(retrofit: Retrofit): DashboardService{

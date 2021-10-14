@@ -1,4 +1,4 @@
-package com.example.mvvmkoin.dashboard.service
+package com.example.mvvmkoin.dashboard.datarepository.service
 
 import com.coderio.pocmvvmandroid.registration.model.LoginRequestData
 import com.coderio.pocmvvmandroid.registration.model.LoginResponseData
