@@ -7,20 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.viewbinding.ViewBinding
 import com.coderio.pocmvvmandroid.common.protocol.CommunicationCallback
 import com.coderio.pocmvvmandroid.common.protocol.ProtocolAction
-import com.example.mvvmkoin.dashboard.action.DashboardActions
+import com.example.mvvmkoin.core.common.Outcome
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseFragment<T : ViewBinding>: Fragment() {
+abstract class BaseFragment<T : ViewBinding,U>: Fragment() {
 
     lateinit var bindingView: T
     private var activity: BaseActivity<*>? = null
     protected var TAG_SCREEN: String? = null
     lateinit var communication: CommunicationCallback
-
-
+    val viewModel : BaseViewModel<U> by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +52,7 @@ abstract class BaseFragment<T : ViewBinding>: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+        listenToObserver()
     }
 
     override fun onAttach(context: Context) {
@@ -62,12 +65,22 @@ abstract class BaseFragment<T : ViewBinding>: Fragment() {
         activity = null
     }
 
+    private fun listenToObserver() {
+        viewModel.outcome.observe(requireActivity(), Observer {outcome ->
+            when(outcome){
+                is Outcome.Success -> onSuccess(outcome.data)
+                is Outcome.Failure -> onError(outcome.e)
+                is Outcome.Progress -> onLoading(outcome.loading)
+                else -> { }
+            }
+        })
+    }
 
     abstract fun init()
 
     protected abstract fun screenName(): String
 
-    abstract fun onSuccess(data: DashboardActions)
+    abstract fun onSuccess(data: U)
 
     abstract fun onLoading(loading: Boolean)
 

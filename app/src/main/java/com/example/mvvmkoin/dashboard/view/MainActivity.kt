@@ -10,8 +10,6 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
     override fun init() {
 
     }
-
-
     //METODO PARA HACER CATCH DE LAS ACCIONES DEL COMUNICATION CALLBACK
     override fun onFragmentEvent(action: ProtocolAction) {
         when (action) {

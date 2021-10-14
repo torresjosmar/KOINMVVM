@@ -1,5 +1,7 @@
 package com.example.mvvmkoin.core.common
 
+import com.example.mvvmkoin.dashboard.action.DashboardActions
+
 sealed class Outcome<T> {
 
     data class Success<T>(var data: T) : Outcome<T>()
