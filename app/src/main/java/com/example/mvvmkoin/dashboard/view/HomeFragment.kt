@@ -28,18 +28,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
-    private fun listenToObserver() {
-        viewModel.outcome.observe(this, Observer {outcome ->
-            when(outcome){
-                is Outcome.Success -> onSuccess(outcome.data)
-                is Outcome.Failure -> onError(outcome.e)
-                is Outcome.Progress -> onLoading(outcome.loading)
-                else -> { }
-            }
-        })
-    }
 
-    override fun onSuccess(data: DashboardActions) {
+    override fun getViewModelData(data: DashboardActions) {
         when(data){
             is DashboardActions.OnLoginResponse -> {
                 communication.onFragmentEvent(ProtocolAction.OnEventName(data.token))
@@ -51,5 +41,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     override fun onLoading(loading: Boolean) {
         progressBar.isVisible = loading
     }
+
+    override fun listenToObserver() {
+        viewModel.outcome.observe(this, Observer {outcome ->
+            when(outcome){
+                is Outcome.Success -> getViewModelData(outcome.data)
+                is Outcome.Failure -> onError(outcome.e)
+                is Outcome.Progress -> onLoading(outcome.loading)
+                else -> { }
+            }
+        })
+    }
+
 
 }

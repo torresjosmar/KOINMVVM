@@ -67,9 +67,11 @@ abstract class BaseFragment<T : ViewBinding>: Fragment() {
 
     protected abstract fun screenName(): String
 
-    abstract fun onSuccess(data: DashboardActions)
+    abstract fun getViewModelData(data: DashboardActions)
 
     abstract fun onLoading(loading: Boolean)
+
+    abstract fun  listenToObserver()
 
     //Capturar todos los errores cross
     fun onError(e: Any) {
