@@ -67,8 +67,6 @@ abstract class BaseFragment<T : ViewBinding>: Fragment() {
 
     protected abstract fun screenName(): String
 
-    abstract fun getViewModelData(data: DashboardActions)
-
     abstract fun onLoading(loading: Boolean)
 
     abstract fun  listenToObserver()

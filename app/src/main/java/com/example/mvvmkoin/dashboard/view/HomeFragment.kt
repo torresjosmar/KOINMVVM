@@ -29,15 +29,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
 
-    override fun getViewModelData(data: DashboardActions) {
+    private fun getViewModelData(data: DashboardActions) {
         when(data){
             is DashboardActions.OnLoginResponse -> {
                 communication.onFragmentEvent(ProtocolAction.OnEventName(data.token))
             }
         }
     }
-
-    //este metodo se puede agregar tambien al base fragment queda por definir
+    
     override fun onLoading(loading: Boolean) {
         progressBar.isVisible = loading
     }
