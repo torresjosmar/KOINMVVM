@@ -5,10 +5,10 @@ import com.example.mvvmkoin.core.common.Outcome
 import com.example.mvvmkoin.core.extensions.applySchedulers
 import com.example.mvvmkoin.core.extensions.plusAssign
 import com.example.mvvmkoin.dashboard.action.DashboardActions
-import com.example.mvvmkoin.dashboard.domain.DashboardController
+import com.example.mvvmkoin.dashboard.usecase.DashboardUseCase
 import io.reactivex.disposables.CompositeDisposable
 
-class DashboardViewModel(private val dashboardController: DashboardController): ViewModel(){
+class DashboardViewModel(private val dashboardUseCase: DashboardUseCase): ViewModel(){
     private val disposable = CompositeDisposable()
     val outcome by lazy { MutableLiveData<Outcome<DashboardActions>>() }
 
@@ -19,7 +19,8 @@ class DashboardViewModel(private val dashboardController: DashboardController): 
 
     fun loginUser(userName: String, password: String) {
         outcome.postValue(Outcome.loading(true))
-        disposable += dashboardController.loginUser(userName, password)
+        dashboardUseCase.bind(userName, password)
+        disposable += dashboardUseCase.loginUser()
             .applySchedulers()
             .subscribe({response ->
                 outcome.postValue(Outcome.loading(false))

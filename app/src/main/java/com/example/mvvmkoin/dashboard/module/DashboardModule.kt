@@ -1,6 +1,6 @@
 package com.example.mvvmkoin.dashboard.module
 
-import com.example.mvvmkoin.dashboard.domain.DashboardController
+import com.example.mvvmkoin.dashboard.usecase.DashboardUseCase
 import com.example.mvvmkoin.dashboard.datarepository.repository.DashboardRepository
 import com.example.mvvmkoin.dashboard.datarepository.service.DashboardService
 import com.example.mvvmkoin.dashboard.viewmodel.DashboardViewModel
@@ -11,9 +11,9 @@ import retrofit2.Retrofit
 
 val dashboardModule: Module = module {
    viewModel {
-      DashboardViewModel(dashboardController = get())
+      DashboardViewModel(dashboardUseCase = get())
    }
-   single { DashboardController(dashboardRepository = get()) }
+   single { DashboardUseCase(dashboardRepository = get()) }
    single { DashboardRepository(dashboardService = get()) }
    single { providerUsersService(get()) }
 
